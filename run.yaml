@@ -1,0 +1,26 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: juphc-tc-run-
+spec:
+  pipelineRef:
+    name: juphc-tc-pipeline
+  params:
+    - name: build-image
+      value: us.icr.io/YOUR_NAMESPACE/tax-calculator:latest
+    - name: repo-url
+      value: https://github.com/slotlykz-ai/juphc-tc_pipeline.git
+    - name: branch
+      value: main
+  workspaces:
+    - name: pipeline-workspace
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+    - name: dockerconfig-ws
+      secret:
+        secretName: registry-dockerconfig
